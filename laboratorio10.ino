@@ -6,6 +6,8 @@
 #include <stdlib.h>
 /*
  * Sensor de Luz
+ patata
+ 
  */
  #define ADC_VREF_mV    3300.0 // 3.3v en millivoltios
 #define ADC_RESOLUTION 4096.0
