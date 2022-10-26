@@ -29,32 +29,12 @@
 
         <hr>
 
-        <h1 class="text-center">MODO TEST</h1>
-
-        <hr>
-
-        <h1 class="text-center">Componentes horno</h1>
-        <div class="container text-center">
-            <div class="row">
-                <div class="col">
-                    <h2>Temperatura</h2>
-                    <canvas id="temp"></canvas>
-                </div>
-                <div class="col">
-                    <h2>Foco</h2>
-                    <img src="https://creazilla-store.fra1.digitaloceanspaces.com/emojis/46959/light-bulb-emoji-clipart-xl.png" alt="" width="300">
-                </div>
-                <div class="col">
-                    <h2>Refrigerante</h2>
-                    <img class="ventilador" id="ventilador"src="pngwing.com.png" width="300" alt="">
-                    
-                    <button onclick="stopRotation()">STOP</button>
-                    <button onclick="startRotation()">START</button>
-                </div>
-            </div>
+        <h1 class="text-center">CONTROL MANUAL</h1>
+        <div class="container">
+            
         </div>
         
-        <hr>
+
 
         <h1 class="text-center">Datos de conexión</h1>
 
@@ -102,51 +82,6 @@
         </div>
 
         <script>
-
-            var temp = new LinearGauge({
-                renderTo: 'temp',
-                width: 120,
-                height: 400,
-                units: "°C",
-                minValue: 0,
-                maxValue: 220,
-                majorTicks: [
-                    "0",
-                    "20",
-                    "40",
-                    "60",
-                    "80",
-                    "100",
-                    "120",
-                    "140",
-                    "160",
-                    "180",
-                    "200",
-                    "220"
-                ],
-                minorTicks: 2,
-                strokeTicks: true,
-                highlights: [
-                    {
-                        "from": 100,
-                        "to": 220,
-                        "color": "rgba(200, 50, 50, .75)"
-                    }
-                ],
-                colorPlate: "transparent",
-                borderShadowWidth: 0,
-                borders: false,
-                needleType: "arrow",
-                needleWidth: 2,
-                animationDuration: 1500,
-                animationRule: "linear",
-                tickSide: "left",
-                numberSide: "left",
-                needleSide: "left",
-                barStrokeWidth: 7,
-                barBeginCircle: false,
-                value: 75,
-            }).draw();
 
             var rssid = new RadialGauge({
                 renderTo: 'rssi',
@@ -236,16 +171,6 @@
             setInterval(function ( ) {
                 getDataConexion();
             }, 10000 ) ;
-
-            /* stop rotation of ventilador */
-            function stopRotation() {
-                document.getElementById("ventilador").style.animationPlayState = "paused";
-            }
-            
-            /* star rotation of ventilador */
-            function startRotation() {
-                document.getElementById("ventilador").style.animationPlayState = "running";
-            }
 
             
         </script>

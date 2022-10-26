@@ -28,6 +28,12 @@ h3{
     color: rgb(196, 81, 0);
 }
 
+
+h2{
+    font-family: 'Bungee Spice', cursive;
+    font-size: 30px;
+}
+
 .img-fluid{
     min-width: 200px;
 }
@@ -38,3 +44,22 @@ h3{
     border-radius: 50%;
 }
 
+@keyframes rotate {from {transform: rotate(0deg);}
+    to {transform: rotate(360deg);}}
+@-webkit-keyframes rotate {from {-webkit-transform: rotate(0deg);}
+  to {-webkit-transform: rotate(360deg);}}
+
+
+/* ventilador img rotate */
+.ventilador{
+    -webkit-animation: 3s rotate linear infinite;
+    animation: 3s rotate linear infinite;
+    -webkit-transform-origin: 50% 50%;
+    transform-origin: 50% 50%;
+}
+
+
+
+
+/* background: rgb(13,0,226);
+background: linear-gradient(90deg, rgba(13,0,226,1) 0%, rgba(73,135,255,1) 35%, rgba(84,226,255,1) 100%); */
