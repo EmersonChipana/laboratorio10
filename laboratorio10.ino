@@ -164,7 +164,8 @@ static int funcluz(long datoADC){
  String gettemp(){
 // Lectura de los datos del sensor
   temp["datoVal"]   = String(analogRead(PIN_LM35));
-   // Convirtiendo los datos del ADC a milivoltios
+   // Convirtiendo los datos del ADC a 
+   milivoltios
   temp["mil"] =  String(datoVal * (ADC_VREF_mV / ADC_RESOLUTION));
   // Convirtiendo el voltaje al temperatura en °C
   temp["tempC"] =  datoVal * factor ; 
@@ -272,22 +273,39 @@ server.on("/ADC", HTTP_GET, [](AsyncWebServerRequest *request){
   });
 
 server.on("/ON", HTTP_GET, [](AsyncWebServerRequest *request){
-             ledcWrite(PWM1_Ch, 255); 
-              pwmValue ="255";
+             ledcWrite(rele, HIGH); 
+              
              //String json = getserv();
              Serial.print("Encendido");
            request->send(0);
    // json = String();
             });
 server.on("/OFF", HTTP_GET, [](AsyncWebServerRequest *request){
-             ledcWrite(PWM1_Ch, 0); 
-             pwmValue ="0";
-            
+             ledcWrite(rele, OFF); 
+
              //String json = getserv();
             Serial.print("Apagado");
            request->send(0);
    // json = String();
             });
+//Ventilador 
+server.on("/VON", HTTP_GET, [](AsyncWebServerRequest *request){
+             ledcWrite(rele2, HIGH); 
+              
+             //String json = getserv();
+             Serial.print("Encendido");
+           request->send(0);
+   // json = String();
+            });
+server.on("/OFF", HTTP_GET, [](AsyncWebServerRequest *request){
+             ledcWrite(rele2, OFF); 
+
+             //String json = getserv();
+            Serial.print("Apagado");
+           request->send(0);
+   // json = String();
+            });
+
 server.on("/SLIDER", HTTP_POST, [](AsyncWebServerRequest *request){
             pwmValue = request->arg("bomb");
             Serial.print("PWM:\t");
@@ -355,52 +373,7 @@ server.on("/LUZSensor", HTTP_GET, [](AsyncWebServerRequest *request){
            request->send(200, "application/json", JSON.stringify(val));
    // json = String();
             });
-
-
-
-server.on("/MOVON", HTTP_GET, [](AsyncWebServerRequest *request){
-  var1=true;
-  while (var1=true){
- pinStatePrevious = pinStateCurrent;             // salvando el estado anteorior
-  pinStateCurrent = digitalRead(PIN_TO_SENSOR);   // leyendo el estado nuevo
-
-  if (pinStatePrevious == LOW && pinStateCurrent == HIGH) {   // Cambio de estado del pin: LOW -> HIGH
-    Serial.println("Movimiento detectado!");
-    digitalWrite(rele,LOW);
-    // Todo lo que se quiera hacer en este estado
-  }
-  else
-  if (pinStatePrevious == HIGH && pinStateCurrent == LOW) {   // Cambio de estadi del pin: HIGH -> LOW
-    digitalWrite(rele,HIGH);
-    Serial.println("Sin movimiento!");
-    // Todo lo que se quiera hacer en este estado
-  }
-  }
-  request->send(0);
-   // json = String();
-            });
-server.on("/MOVOFF", HTTP_GET, [](AsyncWebServerRequest *request){
-  var1=false;
-  while (var1=true){
- pinStatePrevious = pinStateCurrent;             // salvando el estado anteorior
-  pinStateCurrent = digitalRead(PIN_TO_SENSOR);   // leyendo el estado nuevo
-
-  if (pinStatePrevious == LOW && pinStateCurrent == HIGH) {   // Cambio de estado del pin: LOW -> HIGH
-    Serial.println("Movimiento detectado!");
-    digitalWrite(rele,LOW);
-    // Todo lo que se quiera hacer en este estado
-  }
-  else
-  if (pinStatePrevious == HIGH && pinStateCurrent == LOW) {   // Cambio de estadi del pin: HIGH -> LOW
-    digitalWrite(rele,HIGH);
-    Serial.println("Sin movimiento!");
-    // Todo lo que se quiera hacer en este estado
-  }
-  }
-  request->send(0);
-   // json = String();
-            });
-           
+        
   
   server.begin();
 
