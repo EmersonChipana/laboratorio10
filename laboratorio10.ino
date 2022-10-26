@@ -6,8 +6,6 @@
 #include <stdlib.h>
 /*
  * Sensor de Luz
- patata
- 
  */
  #define ADC_VREF_mV    3300.0 // 3.3v en millivoltios
 #define ADC_RESOLUTION 4096.0
@@ -18,6 +16,18 @@ float percent=0.0;
 float factor=100.0/ADC_RESOLUTION;
 
 boolean var1;
+
+/*
+Sensor LMR35
+*/
+#define ADC_VREF_mV    3300.0 // 3.3v en millivoltios
+#define ADC_RESOLUTION 4096.0
+#define PIN_LM35       36 // ESP32 pin GIOP36 (ADC0) conectado al LM35
+#define factor 0.0805860805860
+
+int datoVal;
+float milliVolt,tempC,tempF;
+
 /*
  * Sensor de presencia
  */
@@ -53,6 +63,7 @@ String pwmValue;
  
 
 int rele = 18;
+int rele2 =23
 int ledRojo = 22;
 int ledVerde = 21;
 int ledAzul = 19;
@@ -150,6 +161,17 @@ static int funcluz(long datoADC){
   return jsonString;
 }
 
+ String gettemp(){
+// Lectura de los datos del sensor
+  temp["datoVal"]   = String(analogRead(PIN_LM35));
+   // Convirtiendo los datos del ADC a milivoltios
+  temp["mil"] =  String(datoVal * (ADC_VREF_mV / ADC_RESOLUTION));
+  // Convirtiendo el voltaje al temperatura en °C
+  temp["tempC"] =  datoVal * factor ; 
+  String jsonString = JSON.stringify(temp);
+  return jsonString;
+}
+
 
 void setup() {
 
@@ -163,6 +185,8 @@ void setup() {
   pinMode(PIN_TO_SENSOR, INPUT); // Configurando el pin como entrada//sensor de mov
   
   pinMode(rele,OUTPUT);
+  pinMode(rele2,OUTPUT);
+
   pinMode(ledRojo,OUTPUT);
 pinMode(ledVerde,OUTPUT);
 pinMode(ledAzul,OUTPUT);
