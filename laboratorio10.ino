@@ -184,17 +184,7 @@ pinMode(ledAzul,OUTPUT);
   server.on("/style.css", HTTP_GET, [](AsyncWebServerRequest *request){
             request->send(SPIFFS, "/style.css", "text/css");
             });      
-            /*  
-server.on("/ADC", HTTP_GET, [](AsyncWebServerRequest *request){
-    String json = getSensorReadings();
-    request->send(200, "application/json", json);
-    json = String();
-  });
-  */
-  
- /*
-  * 
-  */
+
 
    server.on("/INFO", HTTP_GET, [](AsyncWebServerRequest *request){
     String json = getinfo();
@@ -222,76 +212,57 @@ digitalWrite(ledAzul,0);
            request->send(0);
    // json = String();
             });
-server.on("/OFF", HTTP_GET, [](AsyncWebServerRequest *request){
-             digitalWrite(rele, LOW); 
-             digitalWrite(ledRojo,0);
-digitalWrite(ledVerde,255);
-digitalWrite(ledAzul,0);
-
-             //String json = getserv();
-            Serial.print("Apagado");
-           request->send(0);
-   // json = String();
+  server.on("/OFF", HTTP_GET, [](AsyncWebServerRequest *request){
+    digitalWrite(rele, LOW); 
+    digitalWrite(ledRojo,0);
+    digitalWrite(ledVerde,255);
+    digitalWrite(ledAzul,0);
+    Serial.print("Apagado");
+    request->send(0);
             });
 //Ventilador 
-server.on("/VON", HTTP_GET, [](AsyncWebServerRequest *request){
-             digitalWrite(rele2, HIGH); 
-             digitalWrite(rele3, HIGH);
-             //String json = getserv();
-             Serial.print("Encendido");
-             digitalWrite(ledRojo,0);
-digitalWrite(ledVerde,0);
-digitalWrite(ledAzul,255);
-           request->send(0);
-   // json = String();
+  server.on("/VON", HTTP_GET, [](AsyncWebServerRequest *request){
+    digitalWrite(rele2, HIGH); 
+    digitalWrite(rele3, HIGH);
+    //String json = getserv();
+    Serial.print("Encendido");
+    digitalWrite(ledRojo,0);
+    digitalWrite(ledVerde,0);
+    digitalWrite(ledAzul,255);
+    request->send(0);
             });
-server.on("/VOFF", HTTP_GET, [](AsyncWebServerRequest *request){
-             digitalWrite(rele2, LOW);
-            digitalWrite(rele3, LOW); 
-
-             //String json = getserv();
-             digitalWrite(ledRojo,255);
-digitalWrite(ledVerde,0);
-digitalWrite(ledAzul,255);
-            Serial.print("Apagado");
-           request->send(0);
-   // json = String();
+  server.on("/VOFF", HTTP_GET, [](AsyncWebServerRequest *request){
+    digitalWrite(rele2, LOW);
+    digitalWrite(rele3, LOW); 
+    digitalWrite(ledRojo,255);
+    digitalWrite(ledVerde,0);
+    digitalWrite(ledAzul,255);
+    Serial.print("Apagado");
+    request->send(0);
             });
 
-server.on("/SET_POINT", HTTP_POST, [](AsyncWebServerRequest *request){
-            pwmValue = request->arg("set_point");
-            valor=pwmValue.toInt();
-           // Spoint(valor);
-           // Serial.println(pwmValue);
-           // ledcWrite(PWM1_Ch, pwmValue.toInt()); 
-            request->redirect("/CONTROL");
-                  
-            });  
-server.on("/TRUE", HTTP_GET, [](AsyncWebServerRequest *request){ 
- mod=true;
-request->send(0);
-   // json = String();
-            });
-server.on("/FALSE", HTTP_GET, [](AsyncWebServerRequest *request){ 
-mod=false;
-request->send(0);
-// json = String();
-});
+  server.on("/SET_POINT", HTTP_POST, [](AsyncWebServerRequest *request){
+    pwmValue = request->arg("set_point");
+    valor=pwmValue.toInt();
+    request->redirect("/CONTROL");    
+  });  
+
+  server.on("/TRUE", HTTP_GET, [](AsyncWebServerRequest *request){ 
+    mod=true;
+    request->send(0);
+  });
+
+  server.on("/FALSE", HTTP_GET, [](AsyncWebServerRequest *request){ 
+    mod=false;
+    request->send(0);
+  });
             
-server.on("/SLIDER", HTTP_POST, [](AsyncWebServerRequest *request){
-            pwmValue = request->arg("bomb");
-            Serial.print("PWM:\t");
-            Serial.println(pwmValue);
-            ledcWrite(PWM1_Ch, pwmValue.toInt()); 
-            request->redirect("/");
-                  
-            });  
 
   server.on("/MIN", HTTP_POST, [](AsyncWebServerRequest *request){
             String min = request->arg("minutos");
             String seg = request->arg("segundos");
             temporizador(min.toInt(),seg.toInt());
-            request->redirect("/Horario");  
+            request->redirect("/HORARIO");  
             });  
 
         
@@ -314,24 +285,23 @@ void temporizador(int min, int seg){
 }
 
 void loop() {
-  datoVal =50;
+  datoVal = analogRead(PIN_LM35);
   float datoC=datoVal*factor;
-if(mod==true){
-  if (datoC>(valor*1.05)){
-    digitalWrite(rele, LOW);    
-    digitalWrite(rele2, HIGH);
-    digitalWrite(rele3, HIGH);
-    estado="1";
-  }else if (datoC<(valor*0.95)){
-    digitalWrite(rele, HIGH);    
-    digitalWrite(rele2,LOW);
-    digitalWrite(rele3,LOW);
-    estado="2";
+  if(mod==true){
+    if (datoC>(valor*1.05)){
+      digitalWrite(rele, LOW);    
+      digitalWrite(rele2, HIGH);
+      digitalWrite(rele3, HIGH);
+      estado="1";
+    }else if (datoC<(valor*0.95)){
+      digitalWrite(rele, HIGH);    
+      digitalWrite(rele2,LOW);
+      digitalWrite(rele3,LOW);
+      estado="2";
+    }
+  }else {
+    estado="0";
   }
- 
-}else {
-   estado="0";
-}
-delay (1000);
+  delay (1000);
   
 }
