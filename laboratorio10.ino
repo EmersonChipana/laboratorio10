@@ -41,6 +41,11 @@ int pinStatePrevious  = LOW;  // estado previo
  int i;
 
  /*
+potenc
+ */
+boolean flag_mode=true,dato;
+int valADC;
+ /*
   * PWMVALUE
   */
 #define PWM1_Ch    0    //canales
@@ -271,6 +276,7 @@ server.on("/ADC", HTTP_GET, [](AsyncWebServerRequest *request){
 
 
   server.on("/TEMP", HTTP_GET, [](AsyncWebServerRequest *request){
+    datoVal=analogRead(33);
     String json = gettemp();
     request->send(200, "application/json", json);
     json = String();
