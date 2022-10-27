@@ -68,25 +68,23 @@
         <h1 class="text-center">Temporizador</h1>
 
         <!-- form bootstrap with minutes and seconds -->
-        <form action="/MIN" method="post">
-            <div class="container text-center">
-                <div class="row">
-                    <div class="col">
-                        <h2>Minutos</h2>
-                        <input type="number" id="minutos" min="0" max="180" value="0" name="minutos" >
-                    </div>
-                    <div class="col">
-                        <h2>Segundos</h2>
-                        <input type="number" id="segundos" min="0" max="60" value="0" name="segundos">
-                    </div>
+        <div class="container text-center">
+            <div class="row">
+                <div class="col">
+                    <h2>Minutos</h2>
+                    <input type="number" id="minutos" min="0" max="180" value="0" name="minutos" >
                 </div>
-                <div class="row">
-                    <div class="col">
-                        <button type="submit" class="btn btn-success">Enviar</button>
-                    </div>
+                <div class="col">
+                    <h2>Segundos</h2>
+                    <input type="number" id="segundos" min="0" max="60" value="0" name="segundos">
                 </div>
             </div>
-        </form>
+            <div class="row">
+                <div class="col">
+                    <button type="button" class="btn btn-success" onclick="Temporizador()">Enviar</button>
+                </div>
+            </div>
+        </div>
 
         <hr>
 
@@ -164,12 +162,25 @@
 
             var horaInicio = document.getElementById("inicio").value;
             var horaFinal = document.getElementById("final").value;
+
             
             //funtion to convert "hh:mm" to minutes
             function convertirHora(hora){
                 var hora = hora.split(":");
                 var hora = parseInt(hora[0])*60 + parseInt(hora[1]);
                 return hora;
+            }
+
+            function Temporizador(){
+                var min = parseInt(document.getElementById("minuto").value);
+                var seg = parseInt(document.getElementById("segundo").value);
+                var total = (min*1000) + (seg*100);
+                encender();
+                startRotation();
+                setTimeout(() => {
+                    apagar();
+                    stopRotation();
+                }, total);
             }
 
 
