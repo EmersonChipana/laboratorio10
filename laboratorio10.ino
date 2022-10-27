@@ -112,23 +112,7 @@ digitalWrite(ledAzul,255);
  }
 }
 
-static int funcluz(long datoADC){
- int value=0;
- if (datoADC == 0) {
-  value=0;
- }else if (datoADC > 0 && datoADC<51) {
-    value=1;
-  } else if (datoADC >= 51 && datoADC<102) {
-    value=2;
-  } else if (datoADC>=102 && datoADC<153) {
-    value=3;
-  } else if (datoADC>=153 && datoADC<204) {  
-    value=4;
-  } else {
-    value=5;
-  }
-  return value;
-}
+
  String getinfo(){
 
   info["dip"] = String(WiFi.localIP());
@@ -157,7 +141,7 @@ void setup() {
 
   Serial.begin(115200); // inicializando el pouerto serial
 
-  pinMode(PIN_TO_SENSOR, INPUT); // Configurando el pin como entrada//sensor de mov
+
   
   pinMode(rele,OUTPUT);
   pinMode(rele2,OUTPUT);
@@ -194,53 +178,7 @@ server.on("/ADC", HTTP_GET, [](AsyncWebServerRequest *request){
  /*
   * 
   */
- server.on("/LUZ", HTTP_POST, [](AsyncWebServerRequest *request){
-             pwmValue = request->arg("bombilla");
-            Serial.print("PWM:\t");
-            Serial.println(pwmValue);
-            ledcWrite(PWM1_Ch, pwmValue.toInt());
-            
-            request->redirect("/");
-            });
-   
-  server.on("/MODO", HTTP_POST, [](AsyncWebServerRequest *request){
-     
-            AsyncWebParameter* p = request->getParam(0);
-            //int color= p->value().toInt();
-            Serial.println("color");
-            Serial.println(p->value().c_str());
-           // Serial.println(color);
-       //  elegirColor(color) ;  
-             
-               
-            });  
 
-  server.on("/MODO1", HTTP_GET, [](AsyncWebServerRequest *request){
-    color =1;
-    elegirColor(color) ;
-    
-    
-  });
-  server.on("/MODO2", HTTP_GET, [](AsyncWebServerRequest *request){
-    color =2;
-    elegirColor(color) ;  
-   
-  });
-  server.on("/MODO3", HTTP_GET, [](AsyncWebServerRequest *request){
-    color =3;
-    elegirColor(color) ; 
-    
-  });
-  server.on("/MODO4", HTTP_GET, [](AsyncWebServerRequest *request){
-     color =4;
-    elegirColor(color) ;  
-    
-  });
-  server.on("/MODO5", HTTP_GET, [](AsyncWebServerRequest *request){
-     color =5;
-    elegirColor(color) ;  
-    
-  });
    server.on("/INFO", HTTP_GET, [](AsyncWebServerRequest *request){
     String json = getinfo();
     request->send(200, "application/json", json);
@@ -323,43 +261,6 @@ server.on("/valorluz",HTTP_GET, [](AsyncWebServerRequest *request){
  val=String();
                   
             });  
-
-server.on("/LUZSensor", HTTP_GET, [](AsyncWebServerRequest *request){
-         JSONVar val;
-     int value=0;
-            digitalWrite(rele,HIGH);
-            datoADC = analogRead(LIGHT_SENSOR_PIN);
-              //porcentaje=factor*datoADC;
-              Serial.print("Valor Analogico = ");
-              Serial.print(datoADC);   
-              Serial.print("  Porcentaje = ");
-              Serial.print(porcentaje);  
-              if (datoADC < 40) {
-                ledcWrite(PWM1_Ch, 50); 
-                Serial.println("%  => Oscuro");
-                value=1;
-              } else if (datoADC < 800) {
-                ledcWrite(PWM1_Ch, 100); 
-                Serial.println("% => Tenue");
-                value=2;
-              } else if (datoADC < 2000) {
-                ledcWrite(PWM1_Ch, 150); 
-                Serial.println("% => Claro");
-                value=3;
-              } else if (datoADC < 3200) {
-                ledcWrite(PWM1_Ch, 200); 
-                Serial.println("% => Luminoso");
-                value=4;
-              } else {
-                ledcWrite(PWM1_Ch, 255); 
-                Serial.println("% => Muy Luminoso");
-                value=5;
-              }
-            Serial.print("Apagado");
-              val["status"] = String(value);
-           request->send(200, "application/json", JSON.stringify(val));
-   // json = String();
-            });
         
   
   server.begin();
@@ -368,52 +269,5 @@ server.on("/LUZSensor", HTTP_GET, [](AsyncWebServerRequest *request){
   
 }  
 void loop() {
-  Serial.print(datoVal * factor);
   
-   datoADC = analogRead(LIGHT_SENSOR_PIN);
-   if(color==3){
-  // lectura del dato analogico (valor entre 0 y 4095)
- 
-  porcentaje=factor*datoADC;
-  Serial.print("Valor Analogico = ");
-  Serial.print(datoADC);   
-  Serial.print("  Porcentaje = ");
-  Serial.print(porcentaje);  
-  if (datoADC < 40) {
-      ledcWrite(PWM1_Ch, 255); 
-      pwmValue = "255";
-      Serial.println("%  => Oscuro");
-    } else if (datoADC < 800) {
-      ledcWrite(PWM1_Ch, 200); 
-      Serial.println("% => Tenue");
-      pwmValue = "200";
-    } else if (datoADC < 2000) {
-      ledcWrite(PWM1_Ch, 150); 
-      Serial.println("% => Claro");
-      pwmValue = "150";
-    } else if (datoADC < 3200) {
-      ledcWrite(PWM1_Ch, 100); 
-      Serial.println("% => Luminoso");
-      pwmValue = "100";
-    } else if (datoADC < 3800) {
-      ledcWrite(PWM1_Ch, 50); 
-      Serial.println("% => Muy Luminoso");
-      pwmValue = "50";
-    } else{
-      ledcWrite(PWM1_Ch, 0); 
-      pwmValue = "0";
-    }
-  delay(500);
-  }
-
-  if(color==5){
-     porcentaje=factor*datoADC;
-     if(porcentaje<percent){
-      ledcWrite(PWM1_Ch, 0); 
-      pwmValue ="0";
-     }else{
-      ledcWrite(PWM1_Ch, 255); 
-      pwmValue ="255";
-     }
-  }
 }
