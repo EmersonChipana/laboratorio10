@@ -40,11 +40,7 @@ int pinStatePrevious  = LOW;  // estado previo
  #define TIMER_WIDTH 16
  int i;
 
- /*
-potenc
- */
-boolean flag_mode=true,dato;
-int valADC;
+
  /*
   * PWMVALUE
   */
