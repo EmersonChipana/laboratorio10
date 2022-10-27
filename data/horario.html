@@ -176,7 +176,7 @@
                 var seg = parseInt(document.getElementById("segundos").value);
                 console.log(min);
                 console.log(seg);
-                var total = (min*1000) + (seg*100);
+                var total = (min*60*1000) + (seg*1000);
                 encender();
                 startRotation();
                 setTimeout(() => {
@@ -189,6 +189,8 @@
             function setHorario(){
                 var horaInicio = document.getElementById("inicio").value;
                 var horaFinal = document.getElementById("final").value;
+                console.log(horaInicio);
+                console.log(horaFinal);
                 var minInicio = convertirHora(horaInicio);
                 var minFinal = convertirHora(horaFinal);
                 var minActual = convertirHora(hora+":"+minuto);
