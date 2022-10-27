@@ -5,6 +5,10 @@
 #include <SPIFFS.h>
 #include <stdlib.h>
 
+boolean mod = true;
+String estado="0";
+int valor;
+
 /*
 Sensor LMR35
 */
@@ -131,6 +135,7 @@ digitalWrite(ledAzul,255);
   temp["mil"] =  String(datoVal * (ADC_VREF_mV / ADC_RESOLUTION));
   // Convirtiendo el voltaje al temperatura en °C
   temp["tempC"] =  datoVal * factor ; 
+  temp["estado"]=estado;
   String jsonString = JSON.stringify(temp);
   return jsonString;
 }
@@ -165,15 +170,13 @@ pinMode(ledAzul,OUTPUT);
   // Route for root / web page
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(SPIFFS, "/index.html",String(), false);
-  });    
-
+  });   
   server.on("/CONTROL", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(SPIFFS, "/control.html",String(), false);
-  }); 
-
+  });   
   server.on("/HORARIO", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(SPIFFS, "/horario.html",String(), false);
-  }); 
+  });    
   server.on("/style.css", HTTP_GET, [](AsyncWebServerRequest *request){
             request->send(SPIFFS, "/style.css", "text/css");
             });      
@@ -251,6 +254,26 @@ digitalWrite(ledAzul,255);
    // json = String();
             });
 
+server.on("/SET_POINT", HTTP_POST, [](AsyncWebServerRequest *request){
+            pwmValue = request->arg("set_point");
+            valor=pwmValue.toInt();
+            Spoint(valor);
+            Serial.println(pwmValue);
+            ledcWrite(PWM1_Ch, pwmValue.toInt()); 
+            request->redirect("/control.html");
+                  
+            });  
+server.on("/TRUE", HTTP_GET, [](AsyncWebServerRequest *request){ 
+ mod=true;
+request->send(0);
+   // json = String();
+            });
+server.on("/FALSE", HTTP_GET, [](AsyncWebServerRequest *request){ 
+mod=false;
+request->send(0);
+// json = String();
+});
+            
 server.on("/SLIDER", HTTP_POST, [](AsyncWebServerRequest *request){
             pwmValue = request->arg("bomb");
             Serial.print("PWM:\t");
@@ -268,5 +291,21 @@ server.on("/SLIDER", HTTP_POST, [](AsyncWebServerRequest *request){
   
 }  
 void loop() {
+  datoVal =analogRead(33);
+  float datoC=datoVal*factor;
+if(mod==true){
+  if (datoC>(valor*1.05)){
+    digitalWrite(rele, LOW);    
+    digitalWrite(rele2, HIGH);
+    digitalWrite(rele3, HIGH);
+    estado="1";
+  }else if (datoC<(valor*0.95)){
+    digitalWrite(rele, HIGH);    
+    digitalWrite(rele2,LOW);
+    digitalWrite(rele3,LOW);
+    estado="2";
+  }
+ 
+}
   
 }
