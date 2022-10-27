@@ -196,16 +196,20 @@ server.on("/ADC", HTTP_GET, [](AsyncWebServerRequest *request){
 
 
 server.on("/ON", HTTP_GET, [](AsyncWebServerRequest *request){
-             ledcWrite(rele, HIGH); 
-              
+             digitalWrite(rele, HIGH); 
+              digitalWrite(ledRojo,255);
+digitalWrite(ledVerde,0);
+digitalWrite(ledAzul,0);
              //String json = getserv();
              Serial.print("Encendido");
            request->send(0);
    // json = String();
             });
 server.on("/OFF", HTTP_GET, [](AsyncWebServerRequest *request){
-             ledcWrite(rele, LOW); 
-             
+             digitalWrite(rele, LOW); 
+             digitalWrite(ledRojo,0);
+digitalWrite(ledVerde,255);
+digitalWrite(ledAzul,0);
 
              //String json = getserv();
             Serial.print("Apagado");
@@ -214,18 +218,24 @@ server.on("/OFF", HTTP_GET, [](AsyncWebServerRequest *request){
             });
 //Ventilador 
 server.on("/VON", HTTP_GET, [](AsyncWebServerRequest *request){
-             ledcWrite(rele2, HIGH); 
-              ledcWrite(rele3, HIGH);
+             digitalWrite(rele2, HIGH); 
+             digitalWrite(rele3, HIGH);
              //String json = getserv();
              Serial.print("Encendido");
+             digitalWrite(ledRojo,0);
+digitalWrite(ledVerde,0);
+digitalWrite(ledAzul,255);
            request->send(0);
    // json = String();
             });
 server.on("/VOFF", HTTP_GET, [](AsyncWebServerRequest *request){
-             ledcWrite(rele2, LOW);
-             ledcWrite(rele3, LOW); 
+             digitalWrite(rele2, LOW);
+            digitalWrite(rele3, LOW); 
 
              //String json = getserv();
+             digitalWrite(ledRojo,255);
+digitalWrite(ledVerde,0);
+digitalWrite(ledAzul,255);
             Serial.print("Apagado");
            request->send(0);
    // json = String();
