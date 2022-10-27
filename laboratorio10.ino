@@ -40,6 +40,7 @@ int pinStatePrevious  = LOW;  // estado previo
  #define TIMER_WIDTH 16
  int i;
 
+
  /*
   * PWMVALUE
   */
@@ -272,7 +273,7 @@ server.on("/ADC", HTTP_GET, [](AsyncWebServerRequest *request){
 
 
   server.on("/TEMP", HTTP_GET, [](AsyncWebServerRequest *request){
-    datoVal = analogRead(17);
+    datoVal=analogRead(33);
     String json = gettemp();
     request->send(200, "application/json", json);
     json = String();
