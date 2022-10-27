@@ -42,19 +42,22 @@
                 </div>
                 <div class="col">
                     <h2>Foco</h2>
-                    <img src="https://creazilla-store.fra1.digitaloceanspaces.com/emojis/46959/light-bulb-emoji-clipart-xl.png" alt="" width="300">
+                    <img id="foco" src="https://creazilla-store.fra1.digitaloceanspaces.com/emojis/45556/light-bulb-emoji-clipart-xl.png" alt="" width="350">
+                    <button class="btn btn-success" onclick="encender()">ENCENDER</button>
+                    <button class="btn btn-danger" onclick="apagar()">APAGAR</button>
                 </div>
                 <div class="col">
                     <h2>Refrigerante</h2>
-                    <img class="ventilador" id="ventilador"src="pngwing.com.png" width="300" alt="">
-                    
-                    <button onclick="stopRotation()">STOP</button>
-                    <button onclick="startRotation()">START</button>
+                    <img class="ventilador" id="ventilador"src="pngwing.com.png" width="350" alt="">
+
+                    <button class="btn btn-success" onclick="startRotation()">ENCENDER</button>
+                    <button class="btn btn-danger" onclick="stopRotation()">APAGAR</button>
                 </div>
             </div>
         </div>
         
         <hr>
+       
 
         <h1 class="text-center">Datos de conexión</h1>
 
@@ -102,6 +105,8 @@
         </div>
 
         <script>
+
+            document.getElementById("ventilador").style.animationPlayState = "paused";
 
             var temp = new LinearGauge({
                 renderTo: 'temp',
@@ -233,18 +238,57 @@
                 xhr.send();
             }
 
+            function getTemp(){
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function(){
+                    if (this.readyState == 4 && this.status == 200) {
+                        var myObj = JSON.parse(this.responseText);
+                        temp.value = myObj.temp;
+                    }
+                };
+                xhr.open("GET", "/TEMP", true);
+                xhr.send();
+            }
+
+            
+
             setInterval(function ( ) {
                 getDataConexion();
+                getTemp();
             }, 10000 ) ;
 
             /* stop rotation of ventilador */
             function stopRotation() {
                 document.getElementById("ventilador").style.animationPlayState = "paused";
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "/VOFF", true);
+                xhr.send();
             }
             
             /* star rotation of ventilador */
             function startRotation() {
                 document.getElementById("ventilador").style.animationPlayState = "running";
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "/VON", true);
+                xhr.send();
+            }
+
+            function encender(){
+                /* change url img foco for apagado */
+                const img = document.getElementById("foco");
+                img.src = "https://creazilla-store.fra1.digitaloceanspaces.com/emojis/46959/light-bulb-emoji-clipart-xl.png";
+
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "/ON", true);
+                xhr.send();
+            }
+
+            function apagar(){
+                const img = document.getElementById("foco");
+                img.src = "https://creazilla-store.fra1.digitaloceanspaces.com/emojis/45556/light-bulb-emoji-clipart-xl.png";
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "/OFF", true);
+                xhr.send();
             }
 
             
