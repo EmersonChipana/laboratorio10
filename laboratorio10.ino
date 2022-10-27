@@ -261,7 +261,7 @@ digitalWrite(ledAzul,255);
 server.on("/SET_POINT", HTTP_POST, [](AsyncWebServerRequest *request){
             pwmValue = request->arg("set_point");
             valor=pwmValue.toInt();
-            Spoint(valor);
+           // Spoint(valor);
             Serial.println(pwmValue);
             ledcWrite(PWM1_Ch, pwmValue.toInt()); 
             request->redirect("/control.html");
@@ -295,7 +295,7 @@ server.on("/SLIDER", HTTP_POST, [](AsyncWebServerRequest *request){
   
 }  
 void loop() {
-  datoVal =analogRead(33);
+  datoVal =50;
   float datoC=datoVal*factor;
 if(mod==true){
   if (datoC>(valor*1.05)){
