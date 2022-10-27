@@ -10,6 +10,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
         <script src="http://cdn.rawgit.com/Mikhus/canvas-gauges/gh-pages/download/2.1.7/all/gauge.min.js"></script>
         <link rel="stylesheet" type="text/css" href="style.css">
+        <script src="https://code.highcharts.com/highcharts.js"></script>
     </head>
     <body>
         
@@ -65,7 +66,29 @@
         </div>
         
         <hr>
-       
+
+        <h1 class="text-center">Temperatura deseada</h1>
+        <form action="/SET_POINT">
+            <div class="container text-center">
+                <div class="row">
+                    <div class="col">
+                        <input type="range" class="form-range" min="0" max="200" step="1" value="0"id="set_point" name="set_point" onchange="setText()">
+                        <label for="set_point" class="form-label" id="TemperatureC">Temperatura °C</label>
+                    </div>
+                    <div class="col">
+                        <!-- button success -->
+                        <button type="submit" class="btn btn-success">Enviar</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <hr>
+
+        <h1 class="text-center">Temperatura actual</h1>
+        <div class="container text-center">
+            <div id="chart-ADC" class="row"></div>
+        </div>
 
         <h1 class="text-center">Datos de conexión</h1>
 
@@ -113,6 +136,52 @@
         </div>
 
         <script>
+            //Set text for temperatureC of the slider set_point
+            function setText(){
+                const val = document.getElementById("set_point").value;
+                document.getElementById("TemperatureC").innerHTML = "Temperatura "+val+" °C";
+            }
+
+            var chartADC = new Highcharts.Chart({
+                chart:{ renderTo:'chart-ADC' },
+                title: { text: 'Temperatura' },
+                series: [{
+                    showInLegend: false,
+                    data: []
+                }],
+                plotOptions: {
+                    line: { animation: false,
+                      dataLabels: { enabled: true }
+                    },
+                series: { color: '#18009c' }
+                },
+                xAxis: {
+                type: 'datetime',
+                dateTimeLabelFormats: { second:'%S' }
+                },
+                  yAxis: {
+                    title: { text: 'Sensor de Temperatura' }
+                  },
+                  credits: { enabled: false }
+            });
+
+            setInterval(function ( ) {
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var myObj = JSON.parse(this.responseText);
+                    var x = (new Date()).getTime();
+                    var y = parseFloat(myObj.tempC);
+                    if(chartADC.series[0].data.length > 40) {
+                        chartADC.series[0].addPoint([x, y], true, true, true);
+                    } else {
+                        chartADC.series[0].addPoint([x, y], true, false, true);
+                    }
+                }
+                };
+                xhttp.open("GET", "/TEMP", true);
+                xhttp.send();
+            }, 1000 ) ;
 
             var temp = new LinearGauge({
                 renderTo: 'temp',
