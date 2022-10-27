@@ -270,6 +270,15 @@ server.on("/ADC", HTTP_GET, [](AsyncWebServerRequest *request){
     json = String();
   });
 
+
+  server.on("/TEMP", HTTP_GET, [](AsyncWebServerRequest *request){
+    String json = gettemp();
+    request->send(200, "application/json", json);
+    json = String();
+  });
+  
+
+
 server.on("/ON", HTTP_GET, [](AsyncWebServerRequest *request){
              ledcWrite(rele, HIGH); 
               
