@@ -106,10 +106,10 @@ void initWiFi() {
 
 void elegirColor(int color){
   if(color == 1) { //Hacer color rojo
-digitalWrite(ledRojo,255);
+
+  }else if (color==2){digitalWrite(ledRojo,255);
 digitalWrite(ledVerde,0);
 digitalWrite(ledAzul,0);
-  }else if (color==2){
  
 //Hacer color verde
 digitalWrite(ledRojo,0);
@@ -166,7 +166,6 @@ static int funcluz(long datoADC){
 // Lectura de los datos del sensor
   temp["datoVal"]   = String(analogRead(PIN_LM35));
    // Convirtiendo los datos del ADC a 
-   milivoltios
   temp["mil"] =  String(datoVal * (ADC_VREF_mV / ADC_RESOLUTION));
   // Convirtiendo el voltaje al temperatura en °C
   temp["tempC"] =  datoVal * factor ; 
@@ -281,15 +280,19 @@ server.on("/ADC", HTTP_GET, [](AsyncWebServerRequest *request){
 
 server.on("/ON", HTTP_GET, [](AsyncWebServerRequest *request){
              ledcWrite(rele, HIGH); 
-              
+              digitalWrite(ledRojo,0);
+              digitalWrite(ledVerde,255);
+              digitalWrite(ledAzul,0);
              //String json = getserv();
              Serial.print("Encendido");
            request->send(0);
    // json = String();
             });
 server.on("/OFF", HTTP_GET, [](AsyncWebServerRequest *request){
-             ledcWrite(rele, OFF); 
-             
+             ledcWrite(rele, LOW); 
+             digitalWrite(ledRojo,255);
+              digitalWrite(ledVerde,0);
+              digitalWrite(ledAzul,0);
 
              //String json = getserv();
             Serial.print("Apagado");
@@ -301,13 +304,20 @@ server.on("/VON", HTTP_GET, [](AsyncWebServerRequest *request){
              ledcWrite(rele2, HIGH); 
               ledcWrite(rele3, HIGH);
              //String json = getserv();
+             digitalWrite(ledRojo,0);
+              digitalWrite(ledVerde,0);
+              digitalWrite(ledAzul,255);
              Serial.print("Encendido");
            request->send(0);
    // json = String();
             });
 server.on("/VOFF", HTTP_GET, [](AsyncWebServerRequest *request){
-             ledcWrite(rele2, OFF);
-             ledcWrite(rele3, OFF); 
+             ledcWrite(rele2,LOW);
+             ledcWrite(rele3,LOW); 
+             //Hacer color magenta
+            digitalWrite(ledRojo,255);
+            digitalWrite(ledVerde,0);
+            digitalWrite(ledAzul,255);
 
              //String json = getserv();
             Serial.print("Apagado");
