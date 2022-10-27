@@ -80,7 +80,7 @@ String header;
  
 
 JSONVar info;
-
+JSONVar temp;
 JSONVar luz;
 
 
