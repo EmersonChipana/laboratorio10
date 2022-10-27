@@ -299,7 +299,7 @@ server.on("/VON", HTTP_GET, [](AsyncWebServerRequest *request){
            request->send(0);
    // json = String();
             });
-server.on("/OFF", HTTP_GET, [](AsyncWebServerRequest *request){
+server.on("/VOFF", HTTP_GET, [](AsyncWebServerRequest *request){
              ledcWrite(rele2, OFF);
              ledcWrite(rele3, OFF); 
 
