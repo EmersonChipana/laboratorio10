@@ -5,9 +5,9 @@
 #include <SPIFFS.h>
 #include <stdlib.h>
 
-boolean mod = true;
+boolean mod = false;
 String estado="0";
-int valor;
+int valor=0;
 
 /*
 Sensor LMR35
@@ -262,9 +262,9 @@ server.on("/SET_POINT", HTTP_POST, [](AsyncWebServerRequest *request){
             pwmValue = request->arg("set_point");
             valor=pwmValue.toInt();
            // Spoint(valor);
-            Serial.println(pwmValue);
-            ledcWrite(PWM1_Ch, pwmValue.toInt()); 
-            request->redirect("/control.html");
+           // Serial.println(pwmValue);
+           // ledcWrite(PWM1_Ch, pwmValue.toInt()); 
+            request->redirect("/CONTROL");
                   
             });  
 server.on("/TRUE", HTTP_GET, [](AsyncWebServerRequest *request){ 
@@ -310,6 +310,9 @@ if(mod==true){
     estado="2";
   }
  
+}else {
+   estado="0";
 }
+delay (1000);
   
 }
