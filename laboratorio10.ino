@@ -4,18 +4,6 @@
 #include <ESPAsyncWebServer.h>
 #include <SPIFFS.h>
 #include <stdlib.h>
-/*
- * Sensor de Luz
- */
- #define ADC_VREF_mV    3300.0 // 3.3v en millivoltios
-#define ADC_RESOLUTION 4096.0
-#define LIGHT_SENSOR_PIN    33
-int datoADC;
-float porcentaje=0.0;
-float percent=0.0;
-float factor=100.0/ADC_RESOLUTION;
-
-boolean var1;
 
 /*
 Sensor LMR35
@@ -27,18 +15,6 @@ Sensor LMR35
 
 int datoVal;
 float milliVolt,tempC,tempF;
-
-/*
- * Sensor de presencia
- */
- const int PIN_TO_SENSOR = 14; // GIOP19 pin conectado al sensor
-int pinStateCurrent   = LOW;  // estado actual
-int pinStatePrevious  = LOW;  // estado previo
-
- #define COUNT_LOW 1638
- #define COUNT_HIGH 7864
- #define TIMER_WIDTH 16
- int i;
 
 
  /*
