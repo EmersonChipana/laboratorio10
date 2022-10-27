@@ -90,6 +90,20 @@
             <div id="chart-ADC" class="row"></div>
         </div>
 
+        <hr>
+        <h1 class="text-center">Encender horno inteligente</h1>
+        <!-- button succes and danger -->
+        <div class="container text-center">
+            <div class="row">
+                <div class="col">
+                    <button class="btn btn-success btn-lg">ON</button>
+                </div>
+                <div class="col">
+                    <button class="btn btn-danger btn-lg">OFF</button>
+                </div>
+            </div>
+        <hr>
+
         <h1 class="text-center">Datos de conexión</h1>
 
         <div class="container text-center">
@@ -319,11 +333,22 @@
                     if (this.readyState == 4 && this.status == 200) {
                         var myObj = JSON.parse(this.responseText);
                         temp.value = myObj.tempC;
+                        if(myObj.estado=="0"){
+                            stopRotation();
+                            apagar();
+                        }else if(myObj.estado=="1"){
+                            startRotation();
+                            apagar();
+                        }else if(myObj.estado=="2"){
+                            stopRotation();
+                            encender();
+                        }
                     }
                 };
                 xhr.open("GET", "/TEMP", true);
                 xhr.send();
             }
+
 
             
 
@@ -364,6 +389,19 @@
                 xhr.open("GET", "/OFF", true);
                 xhr.send();
             }
+
+            function setTrue(){
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "/TRUE", true);
+                xhr.send();
+            }
+
+            function setFalse(){
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "/FALSE", true);
+                xhr.send();
+            }
+
 
             
         </script>
