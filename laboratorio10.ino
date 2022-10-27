@@ -287,6 +287,13 @@ server.on("/SLIDER", HTTP_POST, [](AsyncWebServerRequest *request){
                   
             });  
 
+  server.on("/MIN", HTTP_POST, [](AsyncWebServerRequest *request){
+            String min = request->arg("minutos");
+            String seg = request->arg("segundos");
+            temporizador(min.toInt(),seg.toInt());
+            request->redirect("/Horario");  
+            });  
+
         
   
   server.begin();
@@ -294,6 +301,18 @@ server.on("/SLIDER", HTTP_POST, [](AsyncWebServerRequest *request){
   
   
 }  
+
+void temporizador(int min, int seg){
+  for(int i=0; i<min; i++){
+    for(int j=0; j<60; j++){
+        Serial.print(i);
+        Serial.print(":");
+        Serial.print(j);
+        delay(1000);
+    }
+  }
+}
+
 void loop() {
   datoVal =50;
   float datoC=datoVal*factor;
