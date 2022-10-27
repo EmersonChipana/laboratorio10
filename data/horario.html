@@ -26,20 +26,51 @@
                 </div>
             </div>
         </div>
+        <hr>
+
+        <ul class="nav justify-content-center">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/">TEST</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/CONTROL">CONTROL</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/HORARIO">HORARIO</a>
+            </li>
+        </ul>
 
         <hr>
 
-        <h1 class="text-center">MODO ON/OF</h1>
-        <div class="container">
-            
+        <h1 class="text-center">MODO TEST</h1>
+
+        <hr>
+
+        <h1 class="text-center">Componentes horno</h1>
+        <div class="container text-center">
+            <div class="row">
+                <div class="col">
+                    <h2>Temperatura</h2>
+                    <canvas id="temp"></canvas>
+                </div>
+                <div class="col">
+                    <h2>Foco</h2>
+                    <img id="foco" src="https://creazilla-store.fra1.digitaloceanspaces.com/emojis/45556/light-bulb-emoji-clipart-xl.png" alt="" width="350">
+                    <button class="btn btn-success" onclick="encender()">ENCENDER</button>
+                    <button class="btn btn-danger" onclick="apagar()">APAGAR</button>
+                </div>
+                <div class="col">
+                    <h2>Refrigerante</h2>
+                    <img class="ventilador" id="ventilador"src="https://github.com/EmersonChipana/Datos/blob/main/ventilador.png?raw=true" width="350" alt="">
+
+                    <button class="btn btn-success" onclick="startRotation()">ENCENDER</button>
+                    <button class="btn btn-danger" onclick="stopRotation()">APAGAR</button>
+                </div>
+            </div>
         </div>
-
-        <h1 class="text-center">Temperatura ideal</h1>
-
-        <h1 class="text-center">Datos Temperatura</h1>
         
-        <h1 class="text-center">Sensores</h1>
-
+        <hr>
+       
 
         <h1 class="text-center">Datos de conexión</h1>
 
@@ -70,10 +101,10 @@
             <h1>Integrantes</h1>
             <div class="row">
                 <div class="col">
-                    <img src="https://scontent.flpb1-1.fna.fbcdn.net/v/t1.18169-9/16729524_1036967873081849_5703468641451093347_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=Y4bcAlAdp88AX91PooG&_nc_ht=scontent.flpb1-1.fna&oh=00_AT8DQiBykTdYW9Z704-VTw2ROmalmZOFq8Qr4H7cOitZog&oe=635422D2" class="int-img" alt="">
+                    <img src="https://github.com/EmersonChipana/Datos/blob/main/JesusMeriles.jpeg?raw=true" class="int-img" alt="">
                 </div>
                 <div class="col">
-                    <img src="https://scontent.flpb3-1.fna.fbcdn.net/v/t39.30808-6/302327553_5452262018192767_197903321691436344_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=mDzyRl2r2gcAX_7DhYq&_nc_ht=scontent.flpb3-1.fna&oh=00_AT_s1VIVMUCxYx1H9FHh-7w1U6q1B9xyHYET1shrRW9k4g&oe=633BFFC4"  class="int-img" alt="">
+                    <img src="https://github.com/EmersonChipana/Datos/blob/main/CrisYanez.jpeg?raw=true"  class="int-img" alt="">
                 </div>
                 <div class="col">
                     <img src="https://lh3.googleusercontent.com/a-/ACNPEu9nN_VmsKrjWaC5JRkxeT1KXVJIxRPSpdsif2__=s288-p-rw-no" class="int-img" alt="">
@@ -87,6 +118,51 @@
         </div>
 
         <script>
+
+            var temp = new LinearGauge({
+                renderTo: 'temp',
+                width: 120,
+                height: 400,
+                units: "°C",
+                minValue: 0,
+                maxValue: 220,
+                majorTicks: [
+                    "0",
+                    "20",
+                    "40",
+                    "60",
+                    "80",
+                    "100",
+                    "120",
+                    "140",
+                    "160",
+                    "180",
+                    "200",
+                    "220"
+                ],
+                minorTicks: 2,
+                strokeTicks: true,
+                highlights: [
+                    {
+                        "from": 100,
+                        "to": 220,
+                        "color": "rgba(200, 50, 50, .75)"
+                    }
+                ],
+                colorPlate: "transparent",
+                borderShadowWidth: 0,
+                borders: false,
+                needleType: "arrow",
+                needleWidth: 2,
+                animationDuration: 1500,
+                animationRule: "linear",
+                tickSide: "left",
+                numberSide: "left",
+                needleSide: "left",
+                barStrokeWidth: 7,
+                barBeginCircle: false,
+                value: 75,
+            }).draw();
 
             var rssid = new RadialGauge({
                 renderTo: 'rssi',
@@ -173,9 +249,58 @@
                 xhr.send();
             }
 
+            function getTemp(){
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function(){
+                    if (this.readyState == 4 && this.status == 200) {
+                        var myObj = JSON.parse(this.responseText);
+                        temp.value = myObj.tempC;
+                    }
+                };
+                xhr.open("GET", "/TEMP", true);
+                xhr.send();
+            }
+
+            
+
             setInterval(function ( ) {
                 getDataConexion();
+                getTemp();
             }, 10000 ) ;
+
+            /* stop rotation of ventilador */
+            function stopRotation() {
+                document.getElementById("ventilador").style.animationPlayState = "paused";
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "/VOFF", true);
+                xhr.send();
+            }
+            
+            /* star rotation of ventilador */
+            function startRotation() {
+                document.getElementById("ventilador").style.animationPlayState = "running";
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "/VON", true);
+                xhr.send();
+            }
+
+            function encender(){
+                /* change url img foco for apagado */
+                const img = document.getElementById("foco");
+                img.src = "https://creazilla-store.fra1.digitaloceanspaces.com/emojis/46959/light-bulb-emoji-clipart-xl.png";
+
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "/ON", true);
+                xhr.send();
+            }
+
+            function apagar(){
+                const img = document.getElementById("foco");
+                img.src = "https://creazilla-store.fra1.digitaloceanspaces.com/emojis/45556/light-bulb-emoji-clipart-xl.png";
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "/OFF", true);
+                xhr.send();
+            }
 
             
         </script>
