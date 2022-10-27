@@ -240,27 +240,6 @@ server.on("/SLIDER", HTTP_POST, [](AsyncWebServerRequest *request){
                   
             });  
 
-server.on("/per", HTTP_POST, [](AsyncWebServerRequest *request){
-            percent= (request->arg("p")).toInt();        
-            request->redirect("/");
-            }); 
-
-server.on("/LUZPWD", HTTP_POST, [](AsyncWebServerRequest *request){
-  pwmValue = request->arg("pwd");
-            Serial.print("PWM:\t");
-            Serial.println(pwmValue);
-            ledcWrite(PWM1_Ch, pwmValue.toInt()); 
-            request->redirect("/");
-  }); 
-server.on("/valorluz",HTTP_GET, [](AsyncWebServerRequest *request){
-  JSONVar val;
-  long valor1=pwmValue.toInt();
-  int value=funcluz(valor1);
-  val["status"] = String(value);
-  request->send(200, "application/json", JSON.stringify(val));
- val=String();
-                  
-            });  
         
   
   server.begin();
