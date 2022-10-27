@@ -42,7 +42,7 @@
 
         <hr>
 
-        <h1 class="text-center">MODO TEST</h1>
+        <h1 class="text-center">MODO HORARIO</h1>
 
         <hr>
 
@@ -172,8 +172,8 @@
             }
 
             function Temporizador(){
-                var min = parseInt(document.getElementById("minuto").value);
-                var seg = parseInt(document.getElementById("segundo").value);
+                var min = parseInt(document.getElementById("minutos").value);
+                var seg = parseInt(document.getElementById("segundos").value);
                 var total = (min*1000) + (seg*100);
                 encender();
                 startRotation();
@@ -190,13 +190,15 @@
                 var minInicio = convertirHora(horaInicio);
                 var minFinal = convertirHora(horaFinal);
                 var minActual = convertirHora(hora+":"+minuto);
-                if(minActual >= minInicio && minActual <= minFinal){
-                    encender();
-                    startRotation();
-                }else{
-                    apagar();
-                    stopRotation();
-                }
+                setInterval(() => {
+                    if(minActual > minInicio && minActual < minFinal){
+                        encender();
+                        startRotation();
+                    }else{
+                        apagar();
+                        stopRotation();
+                    }
+                }, 1000);
                 
             }
 
@@ -347,7 +349,7 @@
             setInterval(function ( ) {
                 getDataConexion();
                 getTemp();
-            }, 10000 ) ;
+            }, 2000 ) ;
 
             /* stop rotation of ventilador */
             function stopRotation() {
