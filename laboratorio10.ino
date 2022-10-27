@@ -180,14 +180,11 @@ void setup() {
 
   Serial.begin(115200); // inicializando el pouerto serial
 
-  ledcAttachPin(rele, PWM1_Ch);
-  ledcSetup(PWM1_Ch, PWM1_Freq, PWM1_Res);
-
-
   pinMode(PIN_TO_SENSOR, INPUT); // Configurando el pin como entrada//sensor de mov
   
   pinMode(rele,OUTPUT);
   pinMode(rele2,OUTPUT);
+  pinMode(rele3,OUTPUT);
 
   pinMode(ledRojo,OUTPUT);
 pinMode(ledVerde,OUTPUT);
