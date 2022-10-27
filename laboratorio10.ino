@@ -10,7 +10,7 @@ Sensor LMR35
 */
 #define ADC_VREF_mV    3300.0 // 3.3v en millivoltios
 #define ADC_RESOLUTION 4096.0
-#define PIN_LM35       17 // ESP32 pin GIOP36 (ADC0) conectado al LM35
+#define PIN_LM35       33 // ESP32 pin GIOP36 (ADC0) conectado al LM35
 #define factor 0.0805860805860
 
 int datoVal;
@@ -147,6 +147,8 @@ void setup() {
   pinMode(rele2,OUTPUT);
   pinMode(rele3,OUTPUT);
 
+  pinMode(33,INPUT);
+
   pinMode(ledRojo,OUTPUT);
 pinMode(ledVerde,OUTPUT);
 pinMode(ledAzul,OUTPUT);
@@ -164,6 +166,14 @@ pinMode(ledAzul,OUTPUT);
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(SPIFFS, "/index.html",String(), false);
   });    
+
+  server.on("/CONTROL", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/control.html",String(), false);
+  }); 
+
+  server.on("/HORARIO", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/horario.html",String(), false);
+  }); 
   server.on("/style.css", HTTP_GET, [](AsyncWebServerRequest *request){
             request->send(SPIFFS, "/style.css", "text/css");
             });      
