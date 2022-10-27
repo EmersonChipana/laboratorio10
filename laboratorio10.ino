@@ -22,7 +22,7 @@ Sensor LMR35
 */
 #define ADC_VREF_mV    3300.0 // 3.3v en millivoltios
 #define ADC_RESOLUTION 4096.0
-#define PIN_LM35       36 // ESP32 pin GIOP36 (ADC0) conectado al LM35
+#define PIN_LM35       17 // ESP32 pin GIOP36 (ADC0) conectado al LM35
 #define factor 0.0805860805860
 
 int datoVal;
@@ -106,10 +106,10 @@ void initWiFi() {
 
 void elegirColor(int color){
   if(color == 1) { //Hacer color rojo
-
-  }else if (color==2){digitalWrite(ledRojo,255);
+digitalWrite(ledRojo,255);
 digitalWrite(ledVerde,0);
 digitalWrite(ledAzul,0);
+  }else if (color==2){
  
 //Hacer color verde
 digitalWrite(ledRojo,0);
@@ -164,8 +164,9 @@ static int funcluz(long datoADC){
 
  String gettemp(){
 // Lectura de los datos del sensor
-  temp["datoVal"]   = String(analogRead(PIN_LM35));
-   // Convirtiendo los datos del ADC a 
+  datoVal = analogRead(PIN_LM35);
+  temp["datoVal"]   = String(datoVal);
+   // Convirtiendo los datos del ADC a    milivoltios
   temp["mil"] =  String(datoVal * (ADC_VREF_mV / ADC_RESOLUTION));
   // Convirtiendo el voltaje al temperatura en °C
   temp["tempC"] =  datoVal * factor ; 
@@ -271,6 +272,7 @@ server.on("/ADC", HTTP_GET, [](AsyncWebServerRequest *request){
 
 
   server.on("/TEMP", HTTP_GET, [](AsyncWebServerRequest *request){
+    datoVal = analogRead(17);
     String json = gettemp();
     request->send(200, "application/json", json);
     json = String();
@@ -280,9 +282,7 @@ server.on("/ADC", HTTP_GET, [](AsyncWebServerRequest *request){
 
 server.on("/ON", HTTP_GET, [](AsyncWebServerRequest *request){
              ledcWrite(rele, HIGH); 
-              digitalWrite(ledRojo,0);
-              digitalWrite(ledVerde,255);
-              digitalWrite(ledAzul,0);
+              
              //String json = getserv();
              Serial.print("Encendido");
            request->send(0);
@@ -290,9 +290,7 @@ server.on("/ON", HTTP_GET, [](AsyncWebServerRequest *request){
             });
 server.on("/OFF", HTTP_GET, [](AsyncWebServerRequest *request){
              ledcWrite(rele, LOW); 
-             digitalWrite(ledRojo,255);
-              digitalWrite(ledVerde,0);
-              digitalWrite(ledAzul,0);
+             
 
              //String json = getserv();
             Serial.print("Apagado");
@@ -304,20 +302,13 @@ server.on("/VON", HTTP_GET, [](AsyncWebServerRequest *request){
              ledcWrite(rele2, HIGH); 
               ledcWrite(rele3, HIGH);
              //String json = getserv();
-             digitalWrite(ledRojo,0);
-              digitalWrite(ledVerde,0);
-              digitalWrite(ledAzul,255);
              Serial.print("Encendido");
            request->send(0);
    // json = String();
             });
 server.on("/VOFF", HTTP_GET, [](AsyncWebServerRequest *request){
-             ledcWrite(rele2,LOW);
-             ledcWrite(rele3,LOW); 
-             //Hacer color magenta
-            digitalWrite(ledRojo,255);
-            digitalWrite(ledVerde,0);
-            digitalWrite(ledAzul,255);
+             ledcWrite(rele2, LOW);
+             ledcWrite(rele3, LOW); 
 
              //String json = getserv();
             Serial.print("Apagado");
@@ -400,6 +391,8 @@ server.on("/LUZSensor", HTTP_GET, [](AsyncWebServerRequest *request){
   
 }  
 void loop() {
+  Serial.print(datoVal * factor);
+  
    datoADC = analogRead(LIGHT_SENSOR_PIN);
    if(color==3){
   // lectura del dato analogico (valor entre 0 y 4095)
