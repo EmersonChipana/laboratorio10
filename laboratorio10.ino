@@ -10,7 +10,7 @@ Sensor LMR35
 */
 #define ADC_VREF_mV    3300.0 // 3.3v en millivoltios
 #define ADC_RESOLUTION 4096.0
-#define PIN_LM35       17 // ESP32 pin GIOP36 (ADC0) conectado al LM35
+#define PIN_LM35       33 // ESP32 pin GIOP36 (ADC0) conectado al LM35
 #define factor 0.0805860805860
 
 int datoVal;
@@ -146,6 +146,8 @@ void setup() {
   pinMode(rele,OUTPUT);
   pinMode(rele2,OUTPUT);
   pinMode(rele3,OUTPUT);
+
+  pinMode(33,INPUT);
 
   pinMode(ledRojo,OUTPUT);
 pinMode(ledVerde,OUTPUT);
