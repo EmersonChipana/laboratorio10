@@ -63,7 +63,8 @@ String pwmValue;
  
 
 int rele = 18;
-int rele2 =23
+int rele2 =23;
+int rele3= 14;
 int ledRojo = 22;
 int ledVerde = 21;
 int ledAzul = 19;
@@ -282,6 +283,7 @@ server.on("/ON", HTTP_GET, [](AsyncWebServerRequest *request){
             });
 server.on("/OFF", HTTP_GET, [](AsyncWebServerRequest *request){
              ledcWrite(rele, OFF); 
+             
 
              //String json = getserv();
             Serial.print("Apagado");
@@ -291,14 +293,15 @@ server.on("/OFF", HTTP_GET, [](AsyncWebServerRequest *request){
 //Ventilador 
 server.on("/VON", HTTP_GET, [](AsyncWebServerRequest *request){
              ledcWrite(rele2, HIGH); 
-              
+              ledcWrite(rele3, HIGH);
              //String json = getserv();
              Serial.print("Encendido");
            request->send(0);
    // json = String();
             });
 server.on("/OFF", HTTP_GET, [](AsyncWebServerRequest *request){
-             ledcWrite(rele2, OFF); 
+             ledcWrite(rele2, OFF);
+             ledcWrite(rele3, OFF); 
 
              //String json = getserv();
             Serial.print("Apagado");
