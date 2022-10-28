@@ -43,7 +43,7 @@
 
         <hr>
 
-        <h1 class="text-center">MODO TEST</h1>
+        <h1 class="text-center">MODO CONTROL</h1>
 
         <hr>
 
@@ -243,7 +243,7 @@
                         chartADC.series[0].addPoint([x, y], true, false, true);
                     }
                     if(mod == "2"){
-                        if(chartFoco.series[0].data.length > 40 && chartVent.series[0].data.length > 40) {
+                        if(chartFoco.series[0].data.length > 40) {
                             chartFoco.series[0].addPoint([x, 1], true, true, true);
                             chartVent.series[0].addPoint([x, 0], true, true, true);
                         } else {
@@ -251,7 +251,7 @@
                             chartVent.series[0].addPoint([x, 0], true, false, true);
                         }
                     }else if (mod == "1"){
-                        if(chartFoco.series[0].data.length > 40 && chartVent.series[0].data.length > 40) {
+                        if(chartFoco.series[0].data.length > 40) {
                             chartFoco.series[0].addPoint([x, 0], true, true, true);
                             chartVent.series[0].addPoint([x, 1], true, true, true);
                         } else {
