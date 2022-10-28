@@ -86,7 +86,11 @@
 
         <h1 class="text-center">Temperatura actual</h1>
         <div class="container text-center">
-            <div id="chart-ADC" class="row"></div>
+            <div class="row">
+                <div id="chart-ADC" class="col"></div>
+                <div id="chart-foco" class="col"></div>
+                <div id="chart-vent" class="col"></div>
+            </div>
         </div>
 
         <hr>
@@ -101,6 +105,7 @@
                     <button class="btn btn-danger btn-lg" onclick="setFalse()">OFF</button>
                 </div>
             </div>
+        </div>
         <hr>
 
         <h1 class="text-center">Datos de conexión</h1>
@@ -178,17 +183,81 @@
                   credits: { enabled: false }
             });
 
+            var chartFoco = new Highcharts.Chart({
+                chart:{ renderTo:'chart-foco' },
+                title: { text: 'ESTADO DEL FOCO' },
+                series: [{
+                    showInLegend: false,
+                    data: []
+                }],
+                plotOptions: {
+                    line: { animation: false,
+                      dataLabels: { enabled: true }
+                    },
+                series: { color: '#18009c' }
+                },
+                xAxis: {
+                type: 'datetime',
+                dateTimeLabelFormats: { second:'%S' }
+                },
+                  yAxis: {
+                    title: { text: 'Encendido o apagado' }
+                  },
+                  credits: { enabled: false }
+            });
+
+            var chartVent = new Highcharts.Chart({
+                chart:{ renderTo:'chart-vent' },
+                title: { text: 'ESTADO DEL VENTILADOR' },
+                series: [{
+                    showInLegend: false,
+                    data: []
+                }],
+                plotOptions: {
+                    line: { animation: false,
+                      dataLabels: { enabled: true }
+                    },
+                series: { color: '#18009c' }
+                },
+                xAxis: {
+                type: 'datetime',
+                dateTimeLabelFormats: { second:'%S' }
+                },
+                  yAxis: {
+                    title: { text: 'Encendido o apagado' }
+                  },
+                  credits: { enabled: false }
+            });
+
             setInterval(function ( ) {
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
                     var myObj = JSON.parse(this.responseText);
+                    var mod = myObj.estado;
                     var x = (new Date()).getTime();
                     var y = parseFloat(myObj.tempC);
                     if(chartADC.series[0].data.length > 40) {
                         chartADC.series[0].addPoint([x, y], true, true, true);
                     } else {
                         chartADC.series[0].addPoint([x, y], true, false, true);
+                    }
+                    if(mod == "2"){
+                        if(chartFoco.series[0].data.length > 40 && chartVent.series[0].data.length > 40) {
+                            chartFoco.series[0].addPoint([x, 1], true, true, true);
+                            chartVent.series[0].addPoint([x, 0], true, true, true);
+                        } else {
+                            chartFoco.series[0].addPoint([x, 1], true, false, true);
+                            chartVent.series[0].addPoint([x, 0], true, false, true);
+                        }
+                    }else if (mod == "1"){
+                        if(chartFoco.series[0].data.length > 40 && chartVent.series[0].data.length > 40) {
+                            chartFoco.series[0].addPoint([x, 0], true, true, true);
+                            chartVent.series[0].addPoint([x, 1], true, true, true);
+                        } else {
+                            chartFoco.series[0].addPoint([x, 0], true, false, true);
+                            chartVent.series[0].addPoint([x, 1], true, false, true);
+                        }
                     }
                 }
                 };
